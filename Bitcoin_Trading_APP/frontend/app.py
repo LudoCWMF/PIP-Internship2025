@@ -602,119 +602,35 @@ def show_dashboard():
     for idx, mover in enumerate(top_movers):
         with mover_cols[idx]:
             is_positive = mover['price_change'] >= 0
-            color = '#00D395' if is_positive else '#FF3B69'
-            bg_color = '#0F2922' if is_positive else '#2B1217'
-            arrow = '↑' if is_positive else '↓'
-            
-            # Create a container for the card
-            card_container = st.container()
-            with card_container:
-                # Modern professional card design
-                st.markdown(f"""
-                <div class='top-mover-card' style='
-                    background: #0D0D0D;
-                    border-radius: 16px;
-                    padding: 24px 16px;
-                    height: 220px;
-                    position: relative;
-                    overflow: hidden;
-                    border: 1px solid rgba(255, 255, 255, 0.05);
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: space-between;
-                '>
-
-
-                    
-                    <!-- Logo container -->
-                    <div style='
-                        position: relative;
-                        width: 48px;
-                        height: 48px;
-                        margin-bottom: 12px;
-                    '>
-                        <img src='data:image/png;base64,{mover['logo_b64']}' style='
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 12px;
-                            object-fit: contain;
-                            background: rgba(255, 255, 255, 0.02);
-                            padding: 6px;
-                        '>
-                    </div>
-                    
-                    <!-- Crypto name -->
-                    <div style='
-                        font-size: 0.9rem;
-                        font-weight: 500;
-                        color: #ffffff;
-                        margin-bottom: 2px;
-                        text-align: center;
-                        letter-spacing: 0.3px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 100px;
-                    '>{mover['name']}</div>
-                    
-                    <!-- Symbol -->
-                    <div style='
-                        font-size: 0.7rem;
-                        color: #666666;
-                        margin-bottom: 12px;
-                        text-transform: uppercase;
-                        letter-spacing: 0.5px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 60px;
-                        text-align: center;
-                    '>BTC</div>
-                    
-                    <!-- Price -->
-                    <div style='
-                        font-size: 1.1rem;
-                        font-weight: 600;
-                        color: #ffffff;
-                        margin-bottom: 8px;
-                    '>£{mover['price']:,.2f}</div>
-                    
-                    <!-- Change percentage with background -->
-                    <div style='
-                        background: {bg_color};
-                        color: {color};
-                        padding: 6px 12px;
-                        border-radius: 8px;
-                        font-size: 0.85rem;
-                        font-weight: 600;
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 4px;
-                    '>
-                        <span style='font-size: 0.75rem;'>{arrow}</span>
-                        {abs(mover['price_change']):.2f}%
-                    </div>
+            # Simple card design without complex styling
+            if is_positive:
+                change_html = f'<div style="background-color: #0F2922; color: #00D395; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center;">↑ {abs(mover["price_change"]):.2f}%</div>'
+            else:
+                change_html = f'<div style="background-color: #2B1217; color: #FF3B69; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center;">↓ {abs(mover["price_change"]):.2f}%</div>'
+                
+            st.markdown(f"""
+            <div style="background-color: #0D0D0D; border-radius: 16px; padding: 24px 16px; height: 220px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <div style="width: 48px; height: 48px; margin-bottom: 12px;">
+                    <img src="data:image/png;base64,{mover['logo_b64']}" style="width: 100%; height: 100%; border-radius: 12px; object-fit: contain; background: rgba(255, 255, 255, 0.02); padding: 6px;">
                 </div>
                 
-                <style>
-                .top-mover-card:hover {{
-                    transform: translateY(-4px);
-                    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-                    border-color: rgba(255, 255, 255, 0.1);
-                }}
-                </style>
-                """, unsafe_allow_html=True)
+                <div style="font-size: 0.9rem; font-weight: 500; color: #ffffff; margin-bottom: 2px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">{mover['name']}</div>
                 
-                # Invisible button overlay
-                if st.button("View Details", key=f"top_details_{mover['name']}", 
-                           help=f"View {mover['name']} details",
-                           use_container_width=True):
-                    st.session_state.selected_crypto = mover['name']
-                    st.session_state.details_loading = True
-                    st.rerun()
+                <div style="font-size: 0.7rem; color: #666666; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">BTC</div>
+                
+                <div style="font-size: 1.1rem; font-weight: 600; color: #ffffff; margin-bottom: 8px;">£{mover['price']:,.2f}</div>
+                
+                {change_html}
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Add invisible button overlay
+            if st.button("View Details", key=f"top_details_{mover['name']}", 
+                       help=f"View {mover['name']} details",
+                       use_container_width=True):
+                st.session_state.selected_crypto = mover['name']
+                st.session_state.details_loading = True
+                st.rerun()
 
     # --- Searchable Table of All Cryptos ---
     st.markdown('<h2 style="color: #ffffff; font-size: 2.5rem; font-weight: 800; margin-top: 50px; margin-bottom: 30px;">Prices (24h)</h2>', unsafe_allow_html=True)
