@@ -6,6 +6,7 @@ import pandas as pd
 import base64
 from PIL import Image
 import io
+import re
 
 # Configure Streamlit page
 st.set_page_config(
@@ -217,6 +218,11 @@ def get_price_change(crypto_data):
         change = ((current_price - previous_price) / previous_price) * 100
         return change
     return 0
+
+def extract_short_symbol(symbol):
+    """Extract the alphabetic prefix from a symbol like 'TON11419-USD' -> 'TON', 'BTC-USD' -> 'BTC'"""
+    match = re.match(r"([A-Za-z]+)", symbol)
+    return match.group(1) if match else symbol
 
 def show_dashboard():
     # Apply global black theme styling
@@ -488,9 +494,10 @@ def show_dashboard():
             market_cap = price * 1e9  # Placeholder, you can use your supply dict if you want
             logo_path = crypto_info['logo'] if os.path.exists(crypto_info['logo']) else os.path.join(APP_DIR, "images", "placeholder.png")
             logo_b64 = get_image_as_base64(logo_path)
+            short_symbol = extract_short_symbol(crypto_info['symbol'])
             crypto_data_list.append({
                 'name': crypto_name,
-                'symbol': crypto_info['symbol'].replace('-USD', ''),  # Clean symbol for display
+                'symbol': short_symbol,  # Use cleaned symbol for display
                 'logo_b64': logo_b64,
                 'price': price,
                 'price_change': price_change,
