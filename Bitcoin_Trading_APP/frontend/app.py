@@ -615,7 +615,7 @@ def show_dashboard():
                     background: #0D0D0D;
                     border-radius: 16px;
                     padding: 24px 16px;
-                    height: 220px;
+                    height: 180px;
                     position: relative;
                     overflow: hidden;
                     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -626,16 +626,7 @@ def show_dashboard():
                     align-items: center;
                     justify-content: space-between;
                 '>
-                    <!-- Background accent -->
-                    <div style='
-                        position: absolute;
-                        top: -50%;
-                        right: -50%;
-                        width: 200%;
-                        height: 200%;
-                        background: radial-gradient(circle, {color + '10'} 0%, transparent 70%);
-                        pointer-events: none;
-                    '></div>
+
                     
                     <!-- Logo container -->
                     <div style='
