@@ -300,10 +300,39 @@ def show_dashboard():
             font-size: 0.9rem !important;
         }
         
-        /* Hide some columns on mobile to save space */
-        [data-testid="column"]:nth-child(4),
+        /* Make crypto rows more readable on mobile */
+        [data-testid="stHorizontalBlock"] {
+            gap: 0.2rem !important;
+            margin-bottom: 10px !important;
+            padding: 10px 0 !important;
+            border-bottom: 1px solid #333333 !important;
+        }
+        
+        /* Adjust columns for mobile */
+        [data-testid="column"] {
+            padding: 0 2px !important;
+        }
+        
+        /* Hide logo column on very small screens */
+        @media (max-width: 480px) {
+            [data-testid="column"]:nth-child(1) {
+                display: none !important;
+            }
+        }
+        
+        /* Make text smaller but readable */
+        .stMarkdown span {
+            font-size: 0.85rem !important;
+        }
+        
+        /* Hide market cap on mobile to save space */
         [data-testid="column"]:nth-child(5) {
             display: none !important;
+        }
+        
+        /* Make symbol text smaller */
+        span[style*="color:#666666"] {
+            display: none !important; /* Hide symbol to save space on mobile */
         }
     }
     
