@@ -633,7 +633,7 @@ def show_dashboard():
                         right: -50%;
                         width: 200%;
                         height: 200%;
-                        background: radial-gradient(circle, {color}10 0%, transparent 70%);
+                        background: radial-gradient(circle, {color + '10'} 0%, transparent 70%);
                         pointer-events: none;
                     '></div>
                     
@@ -680,7 +680,7 @@ def show_dashboard():
                         text-overflow: ellipsis;
                         max-width: 60px;
                         text-align: center;
-                    '>{mover['symbol']}</div>
+                    '>{mover['symbol'][:4]}</div>
                     
                     <!-- Price -->
                     <div style='
