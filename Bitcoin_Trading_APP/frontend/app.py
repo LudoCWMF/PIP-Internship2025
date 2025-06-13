@@ -627,16 +627,7 @@ def show_dashboard():
                     justify-content: space-between;
                 '>
 
-                    <!-- Background accent -->
-                    <div style='
-                        position: absolute;
-                        top: -50%;
-                        right: -50%;
-                        width: 200%;
-                        height: 200%;
-                        background: radial-gradient(circle, {color}10 0%, transparent 70%);
-                        pointer-events: none;
-                    '></div>
+
                     
                     <!-- Logo container -->
                     <div style='
@@ -681,7 +672,7 @@ def show_dashboard():
                         text-overflow: ellipsis;
                         max-width: 60px;
                         text-align: center;
-                    '>{mover['symbol']}</div>
+                    '>BTC</div>
                     
                     <!-- Price -->
                     <div style='
