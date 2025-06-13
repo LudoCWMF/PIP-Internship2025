@@ -16,7 +16,10 @@ st.set_page_config(
 )
 
 # Add backend directory to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
 from backend.Trading_Platoform_Bitcoin import get_crypto_data, prepare_features, train_model_and_predict, predict_fiscal_year
 
 def get_image_as_base64(image_path):
