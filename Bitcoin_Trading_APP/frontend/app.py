@@ -534,103 +534,59 @@ def show_dashboard():
         </div>
         <div style='height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, transparent 100%); margin-top: 10px;'></div>
     </div>
-    
-    <style>
-    /* Mobile responsiveness for top movers */
-    @media (max-width: 768px) {
-        .top-movers-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 10px;
-        }
-        
-        .top-movers-wrapper {
-            display: flex;
-            gap: 12px;
-            min-width: fit-content;
-        }
-        
-        .top-mover-card {
-            min-width: 140px !important;
-            height: 200px !important;
-        }
-    }
-    
-    /* Card hover animations */
-    .top-mover-card {
-        position: relative;
-        transform: translateZ(0);
-        backface-visibility: hidden;
-    }
-    
-    .top-mover-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.01) 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-        border-radius: 16px;
-    }
-    
-    .top-mover-card:hover::before {
-        opacity: 1;
-    }
-    
-    /* Button styling override */
-    .stButton button {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background: transparent !important;
-        border: none !important;
-        cursor: pointer !important;
-        opacity: 0 !important;
-        z-index: 2 !important;
-    }
-    </style>
     """, unsafe_allow_html=True)
     
-    # Create modern card layout
+    # Create columns for the top movers
     mover_cols = st.columns(5)
+    
+    # Use Streamlit native components for each card
     for idx, mover in enumerate(top_movers):
         with mover_cols[idx]:
-            is_positive = mover['price_change'] >= 0
-            # Simple card design without complex styling
-            if is_positive:
-                change_html = f'<div style="background-color: #0F2922; color: #00D395; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center;">↑ {abs(mover["price_change"]):.2f}%</div>'
-            else:
-                change_html = f'<div style="background-color: #2B1217; color: #FF3B69; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center;">↓ {abs(mover["price_change"]):.2f}%</div>'
+            with st.container():
+                # Apply custom CSS to the container
+                st.markdown("""
+                <style>
+                div[data-testid="stVerticalBlock"] > div:nth-child(1) {
+                    background-color: #0D0D0D;
+                    border-radius: 16px;
+                    padding: 20px;
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    height: 100%;
+                }
+                </style>
+                """, unsafe_allow_html=True)
                 
-            st.markdown(f"""
-            <div style="background-color: #0D0D0D; border-radius: 16px; padding: 24px 16px; height: 220px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-                <div style="width: 48px; height: 48px; margin-bottom: 12px;">
-                    <img src="data:image/png;base64,{mover['logo_b64']}" style="width: 100%; height: 100%; border-radius: 12px; object-fit: contain; background: rgba(255, 255, 255, 0.02); padding: 6px;">
-                </div>
+                # Logo
+                st.image(
+                    f"data:image/png;base64,{mover['logo_b64']}", 
+                    width=48
+                )
                 
-                <div style="font-size: 0.9rem; font-weight: 500; color: #ffffff; margin-bottom: 2px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">{mover['name']}</div>
+                # Crypto name
+                st.markdown(f"<h3 style='font-size: 0.9rem; text-align: center; margin: 0;'>{mover['name']}</h3>", unsafe_allow_html=True)
                 
-                <div style="font-size: 0.7rem; color: #666666; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">BTC</div>
+                # Price
+                st.markdown(f"<p style='font-size: 1.1rem; font-weight: 600; text-align: center; margin: 5px 0;'>£{mover['price']:,.2f}</p>", unsafe_allow_html=True)
                 
-                <div style="font-size: 1.1rem; font-weight: 600; color: #ffffff; margin-bottom: 8px;">£{mover['price']:,.2f}</div>
+                # Change percentage
+                is_positive = mover['price_change'] >= 0
+                color = '#00D395' if is_positive else '#FF3B69'
+                bg_color = '#0F2922' if is_positive else '#2B1217'
+                arrow = '↑' if is_positive else '↓'
                 
-                {change_html}
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Add invisible button overlay
-            if st.button("View Details", key=f"top_details_{mover['name']}", 
-                       help=f"View {mover['name']} details",
-                       use_container_width=True):
-                st.session_state.selected_crypto = mover['name']
-                st.session_state.details_loading = True
-                st.rerun()
+                st.markdown(
+                    f"<div style='background-color: {bg_color}; color: {color}; padding: 5px 10px; border-radius: 8px; text-align: center; width: fit-content; margin: 0 auto;'>{arrow} {abs(mover['price_change']):.2f}%</div>",
+                    unsafe_allow_html=True
+                )
+                
+                # Button to view details
+                if st.button("View Details", key=f"view_details_{idx}", use_container_width=True):
+                    st.session_state.selected_crypto = mover['name']
+                    st.session_state.details_loading = True
+                    st.rerun()
 
     # --- Searchable Table of All Cryptos ---
     st.markdown('<h2 style="color: #ffffff; font-size: 2.5rem; font-weight: 800; margin-top: 50px; margin-bottom: 30px;">Prices (24h)</h2>', unsafe_allow_html=True)
