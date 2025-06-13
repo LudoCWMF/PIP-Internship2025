@@ -655,15 +655,24 @@ def show_dashboard():
                         margin-bottom: 2px;
                         text-align: center;
                         letter-spacing: 0.3px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 100px;
                     '>{mover['name']}</div>
                     
-                    <!-- Symbol -->
+                    <!-- Symbol (short, clean, no overflow) -->
                     <div style='
                         font-size: 0.7rem;
                         color: #666666;
                         margin-bottom: 12px;
                         text-transform: uppercase;
                         letter-spacing: 0.5px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 60px;
+                        text-align: center;
                     '>{mover['symbol']}</div>
                     
                     <!-- Price -->
@@ -776,7 +785,7 @@ def show_dashboard():
     filtered_cryptos = [c for c in crypto_data_list if search.lower() in c['name'].lower() or search.lower() in c['symbol'].lower()]
     
     # Table header
-    header_cols = st.columns([0.5, 2.5, 1.5, 1.5, 1.5, 1.5])
+    header_cols = st.columns([0.7, 2.2, 1.3, 1.3, 1.3, 1.2])
     with header_cols[1]:
         st.markdown("<span style='color: #666666; font-size: 0.9rem; font-weight: 500;'>Name</span>", unsafe_allow_html=True)
     with header_cols[2]:
@@ -785,47 +794,49 @@ def show_dashboard():
         st.markdown("<span style='color: #666666; font-size: 0.9rem; font-weight: 500;'>Change</span>", unsafe_allow_html=True)
     with header_cols[4]:
         st.markdown("<span style='color: #666666; font-size: 0.9rem; font-weight: 500;'>Market cap ↓</span>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)  # Add spacing after header
     for c in filtered_cryptos:
         change_color = '#00ff88' if c['price_change'] >= 0 else '#ff3366'
         arrow = '↑' if c['price_change'] >= 0 else '↓'
-        
         # Create a container for each crypto row
-        cols = st.columns([0.5, 2.5, 1.5, 1.5, 1.5, 1.5])
-        with cols[0]:
-            st.markdown(f"""
-            <div style='text-align:center;'>
-                <img src='data:image/png;base64,{c['logo_b64']}' 
-                     style='width:45px;height:45px;border-radius:50%;
-                            object-fit: contain;
-                            box-shadow: 0 0 10px rgba(0, 82, 255, 0.2);'>
-            </div>
-            """, unsafe_allow_html=True)
-        with cols[1]:
-            st.markdown(f"""
-            <div>
-                <span style='font-weight:800;color:#ffffff;font-size:1.1rem;'>{c['name']}</span>
-                <span style='font-weight:400;color:#666666;font-size:0.9rem;margin-left:10px;'>{c['symbol']}</span>
-            </div>
-            """, unsafe_allow_html=True)
-        with cols[2]:
-            st.markdown(f"<div style='color:#ffffff;font-weight:700;font-size:1.1rem;'>£{c['price']:,.2f}</div>", unsafe_allow_html=True)
-        with cols[3]:
-            color = '#16c784' if c['price_change'] >= 0 else '#ea3943'
-            arrow = '' if abs(c['price_change']) < 0.01 else '↑' if c['price_change'] >= 0 else '↓'
-            st.markdown(f"""
-            <div style='font-weight:800;color:{color};font-size:1.1rem;
-                        text-shadow: 0 0 5px {color}33;'>
-                {arrow} {abs(c['price_change']):.2f}%
-            </div>
-            """, unsafe_allow_html=True)
-        with cols[4]:
-            st.markdown(f"<div style='color:#ffffff;font-weight:600;font-size:1.1rem;'>£{c['market_cap']/1e9:.1f}B</div>", unsafe_allow_html=True)
-        with cols[5]:
-            if st.button('View Details', key=f'details_{c["name"]}_row', 
-                       help=f"View detailed analysis for {c['name']}"):
-                st.session_state.selected_crypto = c['name']
-                st.session_state.details_loading = True
-                st.rerun()
+        with st.container():
+            cols = st.columns([0.7, 2.2, 1.3, 1.3, 1.3, 1.2])
+            with cols[0]:
+                st.markdown(f"""
+                <div style='text-align:center;'>
+                    <img src='data:image/png;base64,{c['logo_b64']}' 
+                         style='width:45px;height:45px;border-radius:50%;
+                                object-fit: contain;
+                                box-shadow: 0 0 10px rgba(0, 82, 255, 0.2);'>
+                </div>
+                """, unsafe_allow_html=True)
+            with cols[1]:
+                st.markdown(f"""
+                <div>
+                    <span style='font-weight:800;color:#ffffff;font-size:1.1rem;'>{c['name']}</span>
+                    <span style='font-weight:400;color:#666666;font-size:0.9rem;margin-left:10px;'>{c['symbol']}</span>
+                </div>
+                """, unsafe_allow_html=True)
+            with cols[2]:
+                st.markdown(f"<div style='color:#ffffff;font-weight:700;font-size:1.1rem;'>£{c['price']:,.2f}</div>", unsafe_allow_html=True)
+            with cols[3]:
+                color = '#16c784' if c['price_change'] >= 0 else '#ea3943'
+                arrow = '' if abs(c['price_change']) < 0.01 else '↑' if c['price_change'] >= 0 else '↓'
+                st.markdown(f"""
+                <div style='font-weight:800;color:{color};font-size:1.1rem;
+                            text-shadow: 0 0 5px {color}33;'>
+                    {arrow} {abs(c['price_change']):.2f}%
+                </div>
+                """, unsafe_allow_html=True)
+            with cols[4]:
+                st.markdown(f"<div style='color:#ffffff;font-weight:600;font-size:1.1rem;'>£{c['market_cap']/1e9:.1f}B</div>", unsafe_allow_html=True)
+            with cols[5]:
+                if st.button('View Details', key=f'details_{c["name"]}_row', 
+                           help=f"View detailed analysis for {c['name']}"):
+                    st.session_state.selected_crypto = c['name']
+                    st.session_state.details_loading = True
+                    st.rerun()
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)  # Add spacing between rows
 
 def show_details():
     # Apply the same black theme styling
