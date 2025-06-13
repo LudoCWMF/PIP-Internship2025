@@ -615,7 +615,7 @@ def show_dashboard():
                     background: #0D0D0D;
                     border-radius: 16px;
                     padding: 24px 16px;
-                    height: 180px;
+                    height: 220px;
                     position: relative;
                     overflow: hidden;
                     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -627,6 +627,16 @@ def show_dashboard():
                     justify-content: space-between;
                 '>
 
+                    <!-- Background accent -->
+                    <div style='
+                        position: absolute;
+                        top: -50%;
+                        right: -50%;
+                        width: 200%;
+                        height: 200%;
+                        background: radial-gradient(circle, {color}10 0%, transparent 70%);
+                        pointer-events: none;
+                    '></div>
                     
                     <!-- Logo container -->
                     <div style='
@@ -650,7 +660,7 @@ def show_dashboard():
                         font-size: 0.9rem;
                         font-weight: 500;
                         color: #ffffff;
-                        margin-bottom: 12px;
+                        margin-bottom: 2px;
                         text-align: center;
                         letter-spacing: 0.3px;
                         white-space: nowrap;
@@ -658,6 +668,20 @@ def show_dashboard():
                         text-overflow: ellipsis;
                         max-width: 100px;
                     '>{mover['name']}</div>
+                    
+                    <!-- Symbol -->
+                    <div style='
+                        font-size: 0.7rem;
+                        color: #666666;
+                        margin-bottom: 12px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 60px;
+                        text-align: center;
+                    '>{mover['symbol']}</div>
                     
                     <!-- Price -->
                     <div style='
@@ -1300,4 +1324,3 @@ except Exception as e:
         st.cache_data.clear()
         st.session_state.clear()
         st.rerun()
-    
