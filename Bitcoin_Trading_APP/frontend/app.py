@@ -539,56 +539,75 @@ def show_dashboard():
     # Create columns for the top movers
     mover_cols = st.columns(5)
     
-    # Use pure HTML/CSS for better control over layout
+    # Use Streamlit components with proper styling
     for idx, mover in enumerate(top_movers):
         with mover_cols[idx]:
+            # Create a styled container using CSS
+            st.markdown("""
+            <style>
+            .crypto-card {
+                background-color: #0D0D0D;
+                border-radius: 16px;
+                padding: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                text-align: center;
+                margin-bottom: 15px;
+                min-height: 200px;
+            }
+            .crypto-logo {
+                width: 48px;
+                height: 48px;
+                margin: 0 auto 15px auto;
+                display: block;
+                border-radius: 12px;
+            }
+            .crypto-name {
+                color: #ffffff;
+                font-size: 0.9rem;
+                font-weight: 500;
+                margin: 10px 0;
+            }
+            .crypto-price {
+                color: #ffffff;
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin: 10px 0;
+            }
+            .crypto-change {
+                padding: 6px 12px;
+                border-radius: 8px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                display: inline-block;
+                margin: 10px 0;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            
             # Calculate change values
             is_positive = mover['price_change'] >= 0
             color = '#00D395' if is_positive else '#FF3B69'
             bg_color = '#0F2922' if is_positive else '#2B1217'
             arrow = '↑' if is_positive else '↓'
             
-            # Create the complete card as HTML
-            st.markdown(f"""
-            <div style="
-                background-color: #0D0D0D;
-                border-radius: 16px;
-                padding: 20px;
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                text-align: center;
-                height: 240px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: space-evenly;
-                margin-bottom: 10px;
-            ">
-                <img src="data:image/png;base64,{mover['logo_b64']}" 
-                     style="width: 48px; height: 48px; border-radius: 12px; object-fit: contain;">
-                
-                <div style="color: #ffffff; font-size: 0.9rem; font-weight: 500; margin: 5px 0;">
-                    {mover['name']}
-                </div>
-                
-                <div style="color: #ffffff; font-size: 1.1rem; font-weight: 600; margin: 5px 0;">
-                    £{mover['price']:,.2f}
-                </div>
-                
-                <div style="
-                    background-color: {bg_color}; 
-                    color: {color}; 
-                    padding: 6px 12px; 
-                    border-radius: 8px; 
-                    font-size: 0.85rem; 
-                    font-weight: 600;
-                    display: inline-block;
-                ">
-                    {arrow} {abs(mover['price_change']):.2f}%
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            # Create card with individual components
+            st.markdown('<div class="crypto-card">', unsafe_allow_html=True)
             
-            # Button below the card
+            # Logo using st.image but with custom styling
+            st.markdown(f'<img src="data:image/png;base64,{mover["logo_b64"]}" class="crypto-logo">', unsafe_allow_html=True)
+            
+            # Name
+            st.markdown(f'<div class="crypto-name">{mover["name"]}</div>', unsafe_allow_html=True)
+            
+            # Price
+            st.markdown(f'<div class="crypto-price">£{mover["price"]:,.2f}</div>', unsafe_allow_html=True)
+            
+            # Change
+            st.markdown(f'<div class="crypto-change" style="background-color: {bg_color}; color: {color};">{arrow} {abs(mover["price_change"]):.2f}%</div>', unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Button
             if st.button("View Details", key=f"view_details_{idx}", use_container_width=True):
                 st.session_state.selected_crypto = mover['name']
                 st.session_state.details_loading = True
