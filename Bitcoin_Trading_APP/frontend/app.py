@@ -275,18 +275,11 @@ def show_dashboard():
             display: none;
         }
         
-        /* Stack top movers vertically */
-        .top-mover-card {
-            margin-bottom: 15px;
-        }
-        
-        /* Mobile-friendly crypto row */
-        .mobile-crypto-row {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            border-radius: 15px;
-            margin-bottom: 10px;
-            padding: 15px;
-            border: 1px solid #333333;
+        /* Stack columns on mobile */
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 100% !important;
+            min-width: 100% !important;
         }
         
         /* Adjust button sizes for touch */
@@ -302,25 +295,15 @@ def show_dashboard():
             padding: 16px 15px 16px 45px !important;
         }
         
-        /* Hide table headers on mobile */
-        .desktop-only {
-            display: none !important;
+        /* Smaller text in table cells */
+        .stMarkdown {
+            font-size: 0.9rem !important;
         }
         
-        /* Mobile-specific display */
-        .mobile-only {
-            display: block !important;
-        }
-    }
-    
-    /* Desktop-specific */
-    @media (min-width: 769px) {
-        .mobile-only {
+        /* Hide some columns on mobile to save space */
+        [data-testid="column"]:nth-child(4),
+        [data-testid="column"]:nth-child(5) {
             display: none !important;
-        }
-        
-        .desktop-only {
-            display: block !important;
         }
     }
     
@@ -496,25 +479,6 @@ def show_dashboard():
     top_movers = sorted(crypto_data_list, key=lambda x: abs(x['price_change']), reverse=True)[:5]
     st.markdown('<h2 style="color: #ffffff; font-size: 2.5rem; font-weight: 800; margin-bottom: 30px;">Top movers (24h)</h2>', unsafe_allow_html=True)
     
-    # Add mobile CSS for top movers
-    st.markdown("""
-    <style>
-    @media (max-width: 768px) {
-        /* Force columns to stack on mobile */
-        [data-testid="column"] {
-            width: 100% !important;
-            flex: 100% !important;
-            min-width: 100% !important;
-        }
-        
-        /* Adjust top mover cards for mobile */
-        .top-mover-mobile {
-            margin-bottom: 15px;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
     mover_cols = st.columns(5)
     for idx, mover in enumerate(top_movers):
         with mover_cols[idx]:
@@ -614,8 +578,7 @@ def show_dashboard():
     st.markdown('</div></div>', unsafe_allow_html=True)
     filtered_cryptos = [c for c in crypto_data_list if search.lower() in c['name'].lower() or search.lower() in c['symbol'].lower()]
     
-    # Desktop table header (hidden on mobile)
-    st.markdown('<div class="desktop-only">', unsafe_allow_html=True)
+    # Table header
     header_cols = st.columns([0.5, 2.5, 1.5, 1.5, 1.5, 1.5])
     with header_cols[1]:
         st.markdown("<span style='color: #666666; font-size: 0.9rem; font-weight: 500;'>Name</span>", unsafe_allow_html=True)
@@ -625,59 +588,11 @@ def show_dashboard():
         st.markdown("<span style='color: #666666; font-size: 0.9rem; font-weight: 500;'>Change</span>", unsafe_allow_html=True)
     with header_cols[4]:
         st.markdown("<span style='color: #666666; font-size: 0.9rem; font-weight: 500;'>Market cap ↓</span>", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
     for c in filtered_cryptos:
         change_color = '#00ff88' if c['price_change'] >= 0 else '#ff3366'
         arrow = '↑' if c['price_change'] >= 0 else '↓'
         
-        # Mobile card view
-        st.markdown(f"""
-        <div class="mobile-only">
-            <div style='background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-                        border-radius: 15px;
-                        margin-bottom: 15px;
-                        padding: 20px;
-                        border: 1px solid #333333;'>
-                <div style='display: flex; align-items: center; margin-bottom: 15px;'>
-                    <img src='data:image/png;base64,{c['logo_b64']}' 
-                         style='width:50px;height:50px;border-radius:50%;
-                                object-fit: contain;
-                                box-shadow: 0 0 10px rgba(0, 82, 255, 0.2);
-                                margin-right: 15px;'>
-                    <div>
-                        <div style='font-weight:800;color:#ffffff;font-size:1.2rem;'>{c['name']}</div>
-                        <div style='font-weight:400;color:#666666;font-size:0.9rem;'>{c['symbol']}</div>
-                    </div>
-                </div>
-                <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;'>
-                    <div>
-                        <div style='color:#666666;font-size:0.8rem;'>Price</div>
-                        <div style='color:#ffffff;font-weight:700;font-size:1.2rem;'>£{c['price']:,.2f}</div>
-                    </div>
-                    <div style='text-align: right;'>
-                        <div style='color:#666666;font-size:0.8rem;'>24h Change</div>
-                        <div style='font-weight:800;color:{'#16c784' if c['price_change'] >= 0 else '#ea3943'};font-size:1.2rem;'>
-                            {'↑' if c['price_change'] >= 0 else '↓'} {abs(c['price_change']):.2f}%
-                        </div>
-                    </div>
-                </div>
-                <div style='color:#666666;font-size:0.8rem;'>Market Cap: <span style='color:#ffffff;'>£{c['market_cap']/1e9:.1f}B</span></div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Mobile button
-        with st.container():
-            st.markdown('<div class="mobile-only" style="margin-bottom: 10px;">', unsafe_allow_html=True)
-            if st.button('View Details', key=f'details_{c["name"]}_mobile', 
-                       help=f"View detailed analysis for {c['name']}"):
-                st.session_state.selected_crypto = c['name']
-                st.session_state.details_loading = True
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Desktop table row (unchanged)
-        st.markdown('<div class="desktop-only">', unsafe_allow_html=True)
+        # Create a container for each crypto row
         cols = st.columns([0.5, 2.5, 1.5, 1.5, 1.5, 1.5])
         with cols[0]:
             st.markdown(f"""
@@ -714,7 +629,6 @@ def show_dashboard():
                 st.session_state.selected_crypto = c['name']
                 st.session_state.details_loading = True
                 st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
 def show_details():
     # Apply the same black theme styling
