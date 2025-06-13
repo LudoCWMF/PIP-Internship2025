@@ -381,8 +381,17 @@ def show_dashboard():
 
     # --- Calculate 24h change for all cryptos ---
     crypto_data_list = []
-    for crypto_name, crypto_info in crypto_options.items():
+    
+    # Add loading progress bar
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    total_cryptos = len(crypto_options)
+    for idx, (crypto_name, crypto_info) in enumerate(crypto_options.items()):
         try:
+            status_text.text(f'Loading {crypto_name} data... ({idx + 1}/{total_cryptos})')
+            progress_bar.progress((idx + 1) / total_cryptos)
+            
             data = get_crypto_data(crypto_info['symbol'])
             price = data['Close'].iloc[-1]
             price_change = ((data['Close'].iloc[-1] - data['Close'].iloc[-2]) / data['Close'].iloc[-2]) * 100 if len(data) > 1 else 0
@@ -400,6 +409,10 @@ def show_dashboard():
             })
         except Exception as e:
             continue
+    
+    # Clear loading indicators
+    progress_bar.empty()
+    status_text.empty()
 
     # --- Top Movers (24h) ---
     top_movers = sorted(crypto_data_list, key=lambda x: abs(x['price_change']), reverse=True)[:5]
@@ -499,7 +512,7 @@ def show_dashboard():
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
     ''', unsafe_allow_html=True)
-    search = st.text_input("", "", key="crypto_search", placeholder="Filter by name or symbol")
+    search = st.text_input("Search", "", key="crypto_search", placeholder="Filter by name or symbol", label_visibility="hidden")
     st.markdown('</div></div>', unsafe_allow_html=True)
     filtered_cryptos = [c for c in crypto_data_list if search.lower() in c['name'].lower() or search.lower() in c['symbol'].lower()]
     # Professional table header
@@ -979,8 +992,16 @@ def show_details():
 if 'details_loading' not in st.session_state:
     st.session_state.details_loading = False
 
-if st.session_state.selected_crypto is None:
-    show_dashboard()
-else:
-    show_details()
+try:
+    if st.session_state.selected_crypto is None:
+        show_dashboard()
+    else:
+        show_details()
+except Exception as e:
+    st.error(f"An error occurred: {str(e)}")
+    st.error("Please try refreshing the page or contact support if the issue persists.")
+    if st.button("Clear Cache and Reload"):
+        st.cache_data.clear()
+        st.session_state.clear()
+        st.rerun()
     
