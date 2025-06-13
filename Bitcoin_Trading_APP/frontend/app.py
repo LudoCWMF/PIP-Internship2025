@@ -616,8 +616,7 @@ def show_dashboard():
                 with col2:
                     st.image(
                         f"data:image/png;base64,{mover['logo_b64']}", 
-                        width=48,
-                        use_column_width=False
+                        width=48
                     )
                 
                 # Crypto name
