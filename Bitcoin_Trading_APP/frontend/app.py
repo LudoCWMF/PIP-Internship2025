@@ -546,30 +546,85 @@ def show_dashboard():
                 # Apply custom CSS to the container
                 st.markdown("""
                 <style>
-                div[data-testid="stVerticalBlock"] > div:nth-child(1) {
+                .top-mover-container {
                     background-color: #0D0D0D;
                     border-radius: 16px;
-                    padding: 20px;
+                    padding: 20px 16px;
                     border: 1px solid rgba(255, 255, 255, 0.05);
+                    text-align: center;
+                    height: 200px;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    height: 100%;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                }
+                
+                .crypto-logo {
+                    display: block;
+                    margin: 0 auto 10px auto;
+                    border-radius: 12px;
+                }
+                
+                .crypto-name {
+                    color: #ffffff;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    margin: 5px 0;
+                    text-align: center;
+                }
+                
+                .crypto-price {
+                    color: #ffffff;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    margin: 5px 0;
+                    text-align: center;
+                }
+                
+                .crypto-change {
+                    padding: 5px 10px;
+                    border-radius: 8px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    text-align: center;
+                    margin: 5px auto;
+                    display: inline-block;
+                }
+                
+                .stButton > button {
+                    width: 100%;
+                    background-color: #0052ff;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 8px 16px;
+                    font-weight: 500;
+                }
+                
+                .stButton > button:hover {
+                    background-color: #0040cc;
                 }
                 </style>
                 """, unsafe_allow_html=True)
                 
+                # Create a centered container
+                st.markdown('<div class="top-mover-container">', unsafe_allow_html=True)
+                
                 # Logo
-                st.image(
-                    f"data:image/png;base64,{mover['logo_b64']}", 
-                    width=48
-                )
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.image(
+                        f"data:image/png;base64,{mover['logo_b64']}", 
+                        width=48,
+                        use_column_width=False
+                    )
                 
                 # Crypto name
-                st.markdown(f"<h3 style='font-size: 0.9rem; text-align: center; margin: 0;'>{mover['name']}</h3>", unsafe_allow_html=True)
+                st.markdown(f"<div class='crypto-name'>{mover['name']}</div>", unsafe_allow_html=True)
                 
                 # Price
-                st.markdown(f"<p style='font-size: 1.1rem; font-weight: 600; text-align: center; margin: 5px 0;'>£{mover['price']:,.2f}</p>", unsafe_allow_html=True)
+                st.markdown(f"<div class='crypto-price'>£{mover['price']:,.2f}</div>", unsafe_allow_html=True)
                 
                 # Change percentage
                 is_positive = mover['price_change'] >= 0
@@ -578,9 +633,11 @@ def show_dashboard():
                 arrow = '↑' if is_positive else '↓'
                 
                 st.markdown(
-                    f"<div style='background-color: {bg_color}; color: {color}; padding: 5px 10px; border-radius: 8px; text-align: center; width: fit-content; margin: 0 auto;'>{arrow} {abs(mover['price_change']):.2f}%</div>",
+                    f"<div class='crypto-change' style='background-color: {bg_color}; color: {color};'>{arrow} {abs(mover['price_change']):.2f}%</div>",
                     unsafe_allow_html=True
                 )
+                
+                st.markdown('</div>', unsafe_allow_html=True)
                 
                 # Button to view details
                 if st.button("View Details", key=f"view_details_{idx}", use_container_width=True):
