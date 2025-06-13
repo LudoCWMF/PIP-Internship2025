@@ -21,8 +21,10 @@ import sys
 from joblib import Parallel, delayed
 import multiprocessing
 from functools import lru_cache
+import streamlit as st
 warnings.filterwarnings('ignore')
 
+@st.cache_data(ttl=3600)
 def get_crypto_data(symbol="BTC-USD"):
     # Get data from the crypto's inception to today
     end_date = datetime.now()
@@ -114,6 +116,7 @@ def calculate_technical_indicators(df):
 
     return df
 
+@st.cache_data
 def prepare_features(df):
     # Make a copy to avoid modifying the original dataframe
     df = df.copy()
@@ -294,6 +297,7 @@ def train_single_model(model_name, model, X_train, y_train, X_test, y_test, df):
         'metrics': metrics
     }
 
+@st.cache_data
 def train_model_and_predict(df):
     # Prepare features
     features = [col for col in df.columns if col not in ['Open', 'High', 'Low', 'Close', 'Volume']]
