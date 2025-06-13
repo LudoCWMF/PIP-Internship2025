@@ -659,7 +659,7 @@ def show_dashboard():
                         font-size: 0.9rem;
                         font-weight: 500;
                         color: #ffffff;
-                        margin-bottom: 2px;
+                        margin-bottom: 12px;
                         text-align: center;
                         letter-spacing: 0.3px;
                         white-space: nowrap;
@@ -667,20 +667,6 @@ def show_dashboard():
                         text-overflow: ellipsis;
                         max-width: 100px;
                     '>{mover['name']}</div>
-                    
-                    <!-- Symbol (short, clean, no overflow) -->
-                    <div style='
-                        font-size: 0.7rem;
-                        color: #666666;
-                        margin-bottom: 12px;
-                        text-transform: uppercase;
-                        letter-spacing: 0.5px;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 60px;
-                        text-align: center;
-                    '>{mover['symbol'][:4]}</div>
                     
                     <!-- Price -->
                     <div style='
