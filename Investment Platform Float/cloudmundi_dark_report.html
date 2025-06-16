@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudMundi Trading Platform Analysis</title>
+    <style>
+        :root {
+            --vega-teal: #2DD4BF;
+            --vega-navy: #1E293B;
+            --vega-dark: #0F172A;
+            --vega-darker: #020617;
+            --vega-light-teal: #5EEAD4;
+            --vega-accent: #06B6D4;
+            --vega-gray: #64748B;
+            --vega-light-gray: #CBD5E1;
+            --vega-card: #1E293B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Geometric Pattern Background */
+        .geometric-bg {
+            display: none;
+        }
+
+        /* Header with diagonal lines like VEGA */
+        .header {
+            position: relative;
+            background: linear-gradient(135deg, var(--vega-dark) 0%, var(--vega-navy) 100%);
+            padding: 4rem 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 120%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(45, 212, 191, 0.1) 10px,
+                rgba(45, 212, 191, 0.1) 20px
+            );
+            transform: rotate(-45deg);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.5rem;
+            color: var(--vega-teal);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--vega-light-teal);
+            letter-spacing: 0.1rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: #ffffff;
+            border-radius: 1rem;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--vega-teal);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--vega-navy);
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 0.05rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--vega-navy);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--vega-teal);
+            letter-spacing: 0.05rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--vega-navy);
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        /* Executive Summary Box */
+        .executive-box {
+            background: #f8f9fa;
+            border: 1px solid var(--vega-teal);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* Investment Scope Grid */
+        .scope-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .scope-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .scope-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--vega-teal);
+        }
+
+        .scope-card h4 {
+            color: var(--vega-navy);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tables */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: #ffffff;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .comparison-table thead {
+            background: var(--vega-navy);
+        }
+
+        .comparison-table th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: 0.05rem;
+            border-bottom: 2px solid var(--vega-teal);
+        }
+
+        .comparison-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Platform Cards */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .platform-card {
+            background: #f8f9fa;
+            padding: 2.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-card h3 {
+            color: var(--vega-navy);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .strengths-box, .limitations-box {
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .strengths-box::before, .limitations-box::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 1.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+        }
+
+        .strengths-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .strengths-box::before {
+            background: #22C55E;
+        }
+
+        .limitations-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .limitations-box::before {
+            background: #EF4444;
+        }
+
+        /* Recommendation Section */
+        .recommendation-card {
+            background: linear-gradient(135deg, var(--vega-navy) 0%, rgba(45, 212, 191, 0.1) 100%);
+            padding: 3rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin: 3rem 0;
+            border: 2px solid var(--vega-teal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommendation-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 50%;
+            height: 200%;
+            background: rgba(45, 212, 191, 0.05);
+            transform: rotate(45deg);
+        }
+
+        .trophy {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Visualizations */
+        .viz-container {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .viz-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Status Indicators */
+        .yes { color: #22C55E; font-weight: 600; }
+        .no { color: #EF4444; font-weight: 600; }
+        .limited { color: #F59E0B; font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+            color: #1a1a1a;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--vega-dark);
+            text-align: center;
+            padding: 3rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(45, 212, 191, 0.1);
+            color: var(--vega-gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2rem; }
+            .section-card { padding: 2rem 1.5rem; }
+            .platform-grid { grid-template-columns: 1fr; }
+            .scope-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: var(--vega-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--vega-teal);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--vega-light-teal);
+        }
+    </style>
+</head>
+<body>
+    <div class="geometric-bg"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">CLOUDMUNDI</div>
+            <div class="subtitle">Investment Intelligence & Trading Platform Analysis</div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="section-card">
+            <h1>Comparative Analysis: eToro vs Revolut vs Robinhood</h1>
+            
+            <div class="executive-box">
+                <h2>Executive Summary</h2>
+                <p>This report evaluates three leading trading platforms—eToro, Revolut, and Robinhood—to identify the most suitable option for diversified investment across four key asset classes:</p>
+                <ul>
+                    <li><strong>Bitcoin (BTC)</strong></li>
+                    <li><strong>Commodities</strong></li>
+                    <li><strong>S&P 500 Index</strong></li>
+                    <li><strong>Bonds</strong></li>
+                </ul>
+                <p>Our findings are based on platform capabilities, cost structures, feature sets, and regulatory footprints, concluding with a recommendation supported by quantitative insights.</p>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2>Investment Scope</h2>
+            <div class="scope-grid">
+                <div class="scope-card">
+                    <h4>Bitcoin</h4>
+                    <p>High-growth digital asset with increasing institutional adoption</p>
+                </div>
+                <div class="scope-card">
+                    <h4>Commodities</h4>
+                    <p>Inflation hedge and portfolio diversifier (e.g., Gold)</p>
+                </div>
+                <div class="scope-card">
+                    <h4>S&P 500</h4>
+                    <p>Core equity market exposure to U.S. economy</p>
+                </div>
+                <div class="scope-card">
+                    <h4>Bonds</h4>
+                    <p>Capital preservation and yield generation via fixed-income exposure</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2>Platform Comparison Overview</h2>
+            <div style="overflow-x: auto;">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Criteria / Asset Class</th>
+                            <th>eToro</th>
+                            <th>Revolut</th>
+                            <th>Robinhood</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Bitcoin Access</strong></td>
+                            <td class="yes">Yes — Direct crypto + full wallet</td>
+                            <td class="yes">Yes — Limited wallet</td>
+                            <td class="limited">Yes — Custodial only (partial wallet)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fees on BTC Trades</strong></td>
+                            <td>~1% spread</td>
+                            <td>1.5–2.5% spread</td>
+                            <td>Commission-free, higher spread</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wallet Transfers</strong></td>
+                            <td class="yes">Supported</td>
+                            <td class="no">Not fully supported</td>
+                            <td class="limited">Limited beta</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Commodities</strong></td>
+                            <td class="yes">Yes — via CFDs</td>
+                            <td class="limited">Yes — Gold only</td>
+                            <td class="no">Not supported</td>
+                        </tr>
+                        <tr>
+                            <td><strong>S&P 500 Index</strong></td>
+                            <td class="yes">Yes — via ETFs</td>
+                            <td class="yes">Yes — via ETFs or wrapped stocks</td>
+                            <td class="yes">Yes — ETFs, fractional shares</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bond Exposure</strong></td>
+                            <td class="limited">Bond ETFs only</td>
+                            <td class="no">Not available</td>
+                            <td class="yes">Bond ETFs available</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fractional Shares</strong></td>
+                            <td class="yes">Yes</td>
+                            <td class="yes">Yes</td>
+                            <td class="yes">Yes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Copy/Social Trading</strong></td>
+                            <td class="yes">Supported</td>
+                            <td class="no">Not available</td>
+                            <td class="no">Not available</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Platform UI</strong></td>
+                            <td>Engaging, community-driven</td>
+                            <td>Minimalistic, mobile-oriented</td>
+                            <td>Streamlined, data-rich</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Investor Education</strong></td>
+                            <td class="yes">Strong (virtual portfolios, guides)</td>
+                            <td class="limited">Limited</td>
+                            <td class="yes">Strong (interactive learning)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Geographic Access</strong></td>
+                            <td>Global (ex. U.S.)</td>
+                            <td>UK/EU</td>
+                            <td>U.S. only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Regulatory Oversight</strong></td>
+                            <td>FCA, CySEC, ASIC</td>
+                            <td>FCA (E-Money License)</td>
+                            <td>SEC, FINRA</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2>Strengths and Limitations</h2>
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <h3>eToro</h3>
+                    <div class="strengths-box">
+                        <h4>Strengths</h4>
+                        <ul>
+                            <li>Multi-asset support including crypto, commodities, and indices</li>
+                            <li>Comprehensive wallet features and social trading tools</li>
+                            <li>Extensive geographic coverage (excluding the U.S.)</li>
+                        </ul>
+                    </div>
+                    <div class="limitations-box">
+                        <h4>Limitations</h4>
+                        <ul>
+                            <li>Higher trading spreads, especially for leveraged products</li>
+                            <li>Limited access for U.S.-based investors</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <h3>Revolut</h3>
+                    <div class="strengths-box">
+                        <h4>Strengths</h4>
+                        <ul>
+                            <li>Seamless mobile-first user experience</li>
+                            <li>Integrated banking features (FX, budgeting)</li>
+                            <li>Supports beginner-level exposure to key assets</li>
+                        </ul>
+                    </div>
+                    <div class="limitations-box">
+                        <h4>Limitations</h4>
+                        <ul>
+                            <li>High crypto spreads</li>
+                            <li>Limited range of investment products</li>
+                            <li>Not a full-fledged brokerage platform</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="platform-card">
+                    <h3>Robinhood</h3>
+                    <div class="strengths-box">
+                        <h4>Strengths</h4>
+                        <ul>
+                            <li>Commission-free trading structure</li>
+                            <li>Strong educational tools and intuitive interface</li>
+                            <li>Fractional investing and wide ETF coverage</li>
+                        </ul>
+                    </div>
+                    <div class="limitations-box">
+                        <h4>Limitations</h4>
+                        <ul>
+                            <li>Limited international availability (U.S. only)</li>
+                            <li>No commodity instruments</li>
+                            <li>Incomplete crypto wallet infrastructure</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="recommendation-card">
+            <div class="trophy">🏆</div>
+            <h2>Professional Recommendation</h2>
+            <h3>Recommended Platform: eToro</h3>
+            <p><strong>Rationale:</strong> eToro offers the broadest functionality across all four investment categories, with robust support for Bitcoin custody, access to commodities, diversified ETF offerings, and a global regulatory framework. While its trading costs are moderately higher, the added value of copy trading and advanced portfolio tools make it ideal for well-rounded investors.</p>
+            <p style="margin-top: 1.5rem; opacity: 0.8;"><em>For U.S.-based users, Robinhood remains a strong alternative due to accessibility and commission-free execution.</em></p>
+        </div>
+
+        <section class="section-card">
+            <h2>Data Visualizations</h2>
+            
+            <div class="viz-container">
+                <h3>Platform Feature Comparison Matrix</h3>
+                <img src="platform_feature_matrix.png" alt="Platform Feature Matrix">
+            </div>
+
+            <div class="viz-container">
+                <h3>Trading Cost Analysis</h3>
+                <img src="trading_costs_comparison.png" alt="Trading Cost Comparison">
+            </div>
+
+            <div class="viz-container">
+                <h3>Portfolio Performance Projection</h3>
+                <img src="portfolio_simulation.png" alt="Portfolio Simulation">
+            </div>
+
+            <div class="viz-container">
+                <h3>Recommended Asset Allocation</h3>
+                <img src="asset_allocation_pie.png" alt="Asset Allocation">
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2>Appendix: Platform Licensing and Disclosures</h2>
+            <ul>
+                <li><strong>eToro:</strong> Regulated by FCA (UK), CySEC (Cyprus), ASIC (Australia)</li>
+                <li><strong>Revolut:</strong> FCA-licensed e-money institution (not MiFID brokerage)</li>
+                <li><strong>Robinhood:</strong> Registered U.S. broker-dealer, member of FINRA and SIPC</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="logo" style="font-size: 1.5rem; margin-bottom: 1rem;">CLOUDMUNDI</div>
+        <p>Investment Intelligence & Trading Platform Analysis</p>
+        <p style="margin-top: 1rem; opacity: 0.7;">© 2024 CloudMundi. All rights reserved.</p>
+    </footer>
+</body>
+</html> 

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudMundi Trading Platform Analysis</title>
+    <style>
+        :root {
+            --cloudmundi-teal: #2DD4BF;
+            --cloudmundi-navy: #1E3A8A;
+            --cloudmundi-dark: #0F172A;
+            --cloudmundi-light: #F1F5F9;
+            --cloudmundi-accent: #06B6D4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--cloudmundi-dark);
+            background: linear-gradient(135deg, var(--cloudmundi-light) 0%, #ffffff 100%);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--cloudmundi-navy) 0%, var(--cloudmundi-teal) 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .company-logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--cloudmundi-teal);
+        }
+
+        h1 {
+            color: var(--cloudmundi-navy);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--cloudmundi-navy);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid var(--cloudmundi-teal);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: var(--cloudmundi-accent);
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table thead {
+            background: var(--cloudmundi-navy);
+            color: white;
+        }
+
+        .comparison-table tbody tr:nth-child(even) {
+            background: var(--cloudmundi-light);
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, var(--cloudmundi-navy) 0%, var(--cloudmundi-accent) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .chart-placeholder {
+            background: var(--cloudmundi-light);
+            border: 2px dashed var(--cloudmundi-teal);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            min-height: 200px;
+        }
+
+        .yes { color: #22c55e; font-weight: bold; }
+        .no { color: #ef4444; font-weight: bold; }
+        .limited { color: #f59e0b; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="company-logo">☁️ CLOUDMUNDI</div>
+        <div>Investment Intelligence & Trading Platform Analysis</div>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h1>Comparative Analysis: eToro vs Revolut vs Robinhood</h1>
+            
+            <h2>Executive Summary</h2>
+            <p>This report evaluates three leading trading platforms—eToro, Revolut, and Robinhood—to identify the most suitable option for diversified investment across four key asset classes:</p>
+            <ul>
+                <li><strong>Bitcoin (BTC)</strong></li>
+                <li><strong>Commodities</strong></li>
+                <li><strong>S&P 500 Index</strong></li>
+                <li><strong>Bonds</strong></li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Platform Comparison Overview</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Criteria / Asset Class</th>
+                        <th>eToro</th>
+                        <th>Revolut</th>
+                        <th>Robinhood</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Bitcoin Access</strong></td>
+                        <td class="yes">Yes — Direct crypto + full wallet</td>
+                        <td class="yes">Yes — Limited wallet</td>
+                        <td class="limited">Yes — Custodial only</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fees on BTC Trades</strong></td>
+                        <td>~1% spread</td>
+                        <td>1.5–2.5% spread</td>
+                        <td>Commission-free, higher spread</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Commodities</strong></td>
+                        <td class="yes">Yes — via CFDs</td>
+                        <td class="limited">Yes — Gold only</td>
+                        <td class="no">Not supported</td>
+                    </tr>
+                    <tr>
+                        <td><strong>S&P 500 Index</strong></td>
+                        <td class="yes">Yes — via ETFs</td>
+                        <td class="yes">Yes — via ETFs</td>
+                        <td class="yes">Yes — ETFs, fractional shares</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bond Exposure</strong></td>
+                        <td class="limited">Bond ETFs only</td>
+                        <td class="no">Not available</td>
+                        <td class="yes">Bond ETFs available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section">
+            <div class="recommendation">
+                <h2>🏆 Professional Recommendation</h2>
+                <h3>Recommended Platform: eToro</h3>
+                <p><strong>Rationale:</strong> eToro offers the broadest functionality across all four investment categories, with robust support for Bitcoin custody, access to commodities, diversified ETF offerings, and a global regulatory framework.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Data Visualizations</h2>
+            <div>
+                <img src="platform_feature_matrix.png" alt="Platform Feature Matrix" style="width: 100%; max-width: 900px; margin: 1rem auto; display: block; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            </div>
+            <div>
+                <img src="trading_costs_comparison.png" alt="Trading Cost Comparison" style="width: 100%; max-width: 900px; margin: 1rem auto; display: block; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            </div>
+            <div>
+                <img src="portfolio_simulation.png" alt="Portfolio Simulation" style="width: 100%; max-width: 900px; margin: 1rem auto; display: block; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            </div>
+            <div>
+                <img src="asset_allocation_pie.png" alt="Asset Allocation" style="width: 100%; max-width: 700px; margin: 1rem auto; display: block; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+    </div>
+</body>
+</html> 

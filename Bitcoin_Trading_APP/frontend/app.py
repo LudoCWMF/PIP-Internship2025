@@ -547,58 +547,30 @@ def show_dashboard():
             color = '#00D395' if is_positive else '#FF3B69'
             bg_color = '#0F2922' if is_positive else '#2B1217'
             arrow = '↑' if is_positive else '↓'
-            
-            # Create a styled container
-            st.markdown("""
-            <style>
-            .crypto-card {
-                background-color: #0D0D0D;
-                border-radius: 16px;
-                padding: 20px;
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                text-align: center;
-                margin-bottom: 10px;
-                height: 160px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: space-evenly;
-            }
-            </style>
+            # Centered, round logo and name
+            st.markdown(f'''
+            <div style="text-align: center;">
+                <img src="data:image/png;base64,{mover['logo_b64']}" 
+                     style="width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;margin:0 auto;box-shadow:0 0 10px #0052ff33;">
+                <div style="color:#fff;font-size:0.95rem;font-weight:600;margin-top:8px;">{mover['name']}</div>
+            </div>
+            ''', unsafe_allow_html=True)
+            # Percentage change with styling
+            st.markdown(f"""
+            <div style='text-align: center; margin: 10px 0;'>
+                <span style='
+                    background-color: {bg_color}; 
+                    color: {color}; 
+                    padding: 6px 12px; 
+                    border-radius: 8px; 
+                    font-size: 0.85rem; 
+                    font-weight: 600;
+                    display: inline-block;
+                '>
+                    {arrow} {abs(mover['price_change']):.2f}%
+                </span>
+            </div>
             """, unsafe_allow_html=True)
-            
-            # Use native Streamlit components
-            with st.container():
-                # Center the logo using columns
-                col_left, col_center, col_right = st.columns([1, 2, 1])
-                with col_center:
-                    # Display logo as image
-                    if mover['logo_b64']:
-                        import base64
-                        from io import BytesIO
-                        img_data = base64.b64decode(mover['logo_b64'])
-                        st.image(BytesIO(img_data), width=48)
-                
-                # Cryptocurrency name
-                st.markdown(f"<div style='text-align: center; color: #ffffff; font-size: 0.9rem; font-weight: 500; margin: 10px 0;'>{mover['name']}</div>", unsafe_allow_html=True)
-                
-                # Percentage change with styling
-                st.markdown(f"""
-                <div style='text-align: center; margin: 10px 0;'>
-                    <span style='
-                        background-color: {bg_color}; 
-                        color: {color}; 
-                        padding: 6px 12px; 
-                        border-radius: 8px; 
-                        font-size: 0.85rem; 
-                        font-weight: 600;
-                        display: inline-block;
-                    '>
-                        {arrow} {abs(mover['price_change']):.2f}%
-                    </span>
-                </div>
-                """, unsafe_allow_html=True)
-            
             # Button
             if st.button("View Details", key=f"view_details_{idx}", use_container_width=True):
                 st.session_state.selected_crypto = mover['name']
