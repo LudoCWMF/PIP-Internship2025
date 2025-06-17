@@ -21,7 +21,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from backend.Trading_Platoform_Bitcoin import get_crypto_data, prepare_features, train_model_and_predict, predict_fiscal_year
+from backend.Trading_Platoform_Bitcoin import get_crypto_data, prepare_features, train_model_and_predict, predict_fiscal_year, get_live_btc_price
 
 def get_image_as_base64(image_path):
     """Convert a PNG image to base64 string, fallback to placeholder if missing."""

@@ -22,6 +22,8 @@ from joblib import Parallel, delayed
 import multiprocessing
 from functools import lru_cache
 import streamlit as st
+import requests
+
 warnings.filterwarnings('ignore')
 
 @st.cache_data(ttl=3600)
@@ -538,6 +540,22 @@ def plot_bitcoin_history(df, tomorrow_pred, y_test, y_pred, fiscal_year_preds):
         # Save the plot instead
         plt.savefig('bitcoin_prediction.png', dpi=300, bbox_inches='tight')
         print("Plot has been saved as 'bitcoin_prediction.png'")
+
+def get_live_btc_price():
+    """Fetch the current Bitcoin price in USD from CoinGecko (real-time)."""
+    url = "https://api.coingecko.com/api/v3/simple/price"
+    params = {
+        "ids": "bitcoin",
+        "vs_currencies": "usd"
+    }
+    try:
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        return float(data["bitcoin"]["usd"])
+    except Exception as e:
+        print(f"Error fetching live BTC price from CoinGecko: {e}")
+        return None
 
 def main(symbol="BTC-USD"):
     try:
